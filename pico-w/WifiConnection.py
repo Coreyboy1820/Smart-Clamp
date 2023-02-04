@@ -5,7 +5,8 @@ import machine
 import urequests as requests
 import time
 
-class WifiConnection:
+class WiFiConnection:
+
     def __init__(self, ssid, pw):
         self.ssid = ssid
         self.pw = pw
