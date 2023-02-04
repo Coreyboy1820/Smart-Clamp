@@ -1,10 +1,10 @@
 import express from "express";
-import { getWorkouts, addWorkout, updateWorkout, deleteWorkout } from "../handlers/workouts-handler";
+import { readWorkouts, createWorkout, updateWorkout, deleteWorkout } from "../handlers/workouts-handler";
 
 const workoutsRoute = express.Router();
 
-workoutsRoute.get("/", getWorkouts);
-workoutsRoute.post("/", addWorkout);
+workoutsRoute.get("/", readWorkouts);
+workoutsRoute.post("/", createWorkout);
 workoutsRoute.put("/:id", updateWorkout);
 workoutsRoute.delete("/:id", deleteWorkout);
 
