@@ -4,9 +4,9 @@ import ubinascii
 import machine
 import urequests as requests
 import time
+import ujson
 
 class WiFiConnection:
-
     def __init__(self, ssid, pw):
         self.ssid = ssid
         self.pw = pw
@@ -49,6 +49,4 @@ class WiFiConnection:
             print('ip = ' + status[0])
             
     def post(self, url, json_data):
-        requests.post(url, data=json_data)
-
-
+        requests.post(url, json=json_data)
