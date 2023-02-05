@@ -137,6 +137,7 @@ class RotaryDisplay:
                 self.startSet == False
             else:
                 # this should only happen if you are on the home screen.
+                print(self.highlight)
                 if (self.highlight == 1 or self.highlight == 2) and not self.selectPressed:
                     self.selectPressed = True
                 elif (self.highlight == 1 or self.highlight==2) and self.selectPressed:
