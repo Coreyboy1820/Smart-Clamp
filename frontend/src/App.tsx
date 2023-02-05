@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 import { getWorkouts } from './util/api/workouts.api';
 import { WorkoutsDTO, WorkoutsGETParametersDTO } from './dto/workouts.dto';
-import { WORKOUT_FILTERS } from './util/constants';
+import { WORKOUT_FILTERS, currentUser } from './util/constants';
 import Leaderboard from './components/Leaderboard';
 import Workouts from './components/Workouts';
 import './App.css';
@@ -23,7 +23,7 @@ function App() {
       return workout;
     }
   })
-  const user = { username: 'user1', workouts: workouts.filter(workout => workout.username === 'user1') }
+  const user = { username: currentUser, workouts: workouts.filter(workout => workout.username === currentUser) }
   const exercises = workouts.map((workout) => workout.exercise).filter((exercise, index, self) => self.indexOf(exercise) === index);
   const exerciseOptions = exercises.map((exercise) => { return (<option key={exercise} value={exercise}>{exercise}</option>) })
   const dateOptions = workouts.map((workout) => workout.created_at.split('T')[0]).filter((created_at, index, self) => self.indexOf(created_at) === index).map((createdAtDate) => { return (<option key={createdAtDate} value={createdAtDate}>{createdAtDate}</option>) })
@@ -37,27 +37,37 @@ function App() {
   }, [user.username]);
 
   return (
-    <div className="App">
+    <div>
       <header className="App-header">
         <h1>Smart Clamp</h1>
       </header>
       <main>
-        <select
-          name='exercise'
-          value={workoutFilters.exercise}
-          onChange={(e) => setWorkoutFilters({ ...workoutFilters, [e.target.name]: e.target.value })}
-        >
-          {exerciseOptions}
-        </select>
-        <select
-          name='created_at'
-          value={workoutFilters.created_at}
-          onChange={(e) => setWorkoutFilters({ ...workoutFilters, [e.target.name]: e.target.value })}
-        >
-          {dateOptions}
-        </select>
-        <Workouts workouts={filteredUserWorkouts} exercise={workoutFilters.exercise} />
-        <Leaderboard workouts={sortedLeaderboardWorkouts} exercise={workoutFilters.exercise} />
+        <div className='input-group'>
+          <select
+            className='dropdown-selector-group'
+            name='exercise'
+            value={workoutFilters.exercise}
+            onChange={(e) => setWorkoutFilters({ ...workoutFilters, [e.target.name]: e.target.value })}
+          >
+            {exerciseOptions}
+          </select>
+          <select
+            className='dropdown-selector-group'
+            name='created_at'
+            value={workoutFilters.created_at}
+            onChange={(e) => setWorkoutFilters({ ...workoutFilters, [e.target.name]: e.target.value })}
+          >
+            {dateOptions}
+          </select>
+        </div>
+        <div className='grids'>
+          <div className='grid'>
+            <Workouts workouts={filteredUserWorkouts} exercise={workoutFilters.exercise} />
+          </div>
+          <div className='grid'>
+            <Leaderboard workouts={sortedLeaderboardWorkouts} exercise={workoutFilters.exercise} />
+          </div>
+        </div>
       </main>
     </div>
   );
