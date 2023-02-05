@@ -32,7 +32,7 @@ class RotaryDisplay:
         """ Launch the Python script <filename> """
         # clear the screen
         self.oled.fill_rect(0,0,self.width,self.height,0)
-        self.oled.text("Launching", 1, 10)
+        self.oled.text("Launching", 1, 60)
         self.oled.show()
 
     def displayMenu(self):
@@ -58,7 +58,6 @@ class RotaryDisplay:
 
     def handleCursor(self):
         # move up
-        print(self.highlight)
         if self.upButton.read():
             if self.highlight > 1:
                 self.highlight -=1
