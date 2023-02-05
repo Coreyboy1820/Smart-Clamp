@@ -36,3 +36,12 @@ class Workouts:
             self.weight_state = 'down'
             self.reps+=1
         return self.reps
+    
+    def BentOverRows(self):
+        accel = self.Update()
+        if (accel[2] < 0.7 and accel[0] > -0.5 and self.weight_state != 'up'):
+            self.weight_state = 'up'
+        elif(accel[2] > 0.95 and accel[0] < 0.2 and self.weight_state == 'up'):
+            self.weight_state = 'down'
+            self.reps+=1
+        return self.reps
