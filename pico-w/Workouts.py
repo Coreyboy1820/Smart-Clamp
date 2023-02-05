@@ -12,12 +12,6 @@ class Workouts:
         self.max_reps = max_reps
         self.rep_distance = []
         
-    def RepType(self, rep_type):
-        if (rep_type == 'FULL'):
-            self.rep_distance = [0.5, -0.7, 0.7, 0.5]
-        elif(rep_type == 'HALF')
-            self.rep_distance = [0.25, -0.35, 0.35, 0.25]
-        
     def Update(self):
         ax=round(self.imu.accel.x,4)
         ay=round(self.imu.accel.y,4)
@@ -27,9 +21,18 @@ class Workouts:
         
     def BicepCurls(self):
         accel = self.Update()
-        if (accel[2] < self.rep_distance[0] and accel[0] > self.rep_distance[1] and self.weight_state != 'up'):
+        if (accel[2] < 0.5 and accel[0] > -0.7 and self.weight_state != 'up'):
             self.weight_state = 'up'
-        elif(accel[2] > self.rep_distance[2] and accel[0] < self.rep_distance[3] and self.weight_state == 'up'):
+        elif(accel[2] > 0.7 and accel[0] < 0.5 and self.weight_state == 'up'):
+            self.weight_state = 'down'
+            self.reps+=1
+        return self.reps
+    
+    def BenchPress(self):
+        accel = self.Update()
+        if (accel[2] < 0.5 and accel[0] > -0.7 and self.weight_state != 'up'):
+            self.weight_state = 'up'
+        elif(accel[2] > 0.7 and accel[0] < 0.5 and self.weight_state == 'up'):
             self.weight_state = 'down'
             self.reps+=1
         return self.reps
