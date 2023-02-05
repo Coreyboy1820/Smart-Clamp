@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 import { getWorkouts } from './util/api/workouts.api';
 import { WorkoutsDTO, WorkoutsGETParametersDTO } from './dto/workouts.dto';
-import { WORKOUT_FILTERS, currentUser } from './util/constants';
+import { WORKOUT_FILTERS, CURRENT_USER } from './util/constants';
 import Leaderboard from './components/Leaderboard';
 import Workouts from './components/Workouts';
 import './App.css';
@@ -23,9 +23,10 @@ function App() {
       return workout;
     }
   })
-  const user = { username: currentUser, workouts: workouts.filter(workout => workout.username === currentUser) }
+  const user = { username: CURRENT_USER, workouts: workouts.filter(workout => workout.username === CURRENT_USER) }
   const exercises = workouts.map((workout) => workout.exercise).filter((exercise, index, self) => self.indexOf(exercise) === index);
   const exerciseOptions = exercises.map((exercise) => { return (<option key={exercise} value={exercise}>{exercise}</option>) })
+
   const dateOptions = workouts.map((workout) => workout.created_at.split('T')[0]).filter((created_at, index, self) => self.indexOf(created_at) === index).map((createdAtDate) => { return (<option key={createdAtDate} value={createdAtDate}>{createdAtDate}</option>) })
 
   useEffect(() => {

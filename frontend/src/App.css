@@ -72,6 +72,12 @@ main {
   border-radius: 8px;
 }
 
+@media (max-width: 600px) {
+  .grids {
+    grid-template-columns: 1fr;
+  }
+}
+
 *,
 *::before,
 *::after {
