@@ -1,5 +1,3 @@
-import { useState, useEffect } from 'react'
-
 export default function Leaderboard({ workouts, exercise }) {
     const leaderboardList = workouts.map((workout, index) => {
         return (

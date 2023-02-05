@@ -1,7 +1,3 @@
-import { useEffect, useState } from 'react'
-import { WorkoutsDTO, WorkoutsGETParametersDTO } from '../dto/workouts.dto';
-import { WORKOUT_FILTERS } from '../util/constants';
-
 export default function Workouts({ workouts, exercise }) {
   const workoutList = workouts.map((workout) => {
     return (

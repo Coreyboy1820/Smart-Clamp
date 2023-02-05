@@ -28,8 +28,6 @@ function App() {
   const exerciseOptions = exercises.map((exercise) => { return (<option key={exercise} value={exercise}>{exercise}</option>) })
   const dateOptions = workouts.map((workout) => workout.created_at.split('T')[0]).filter((created_at, index, self) => self.indexOf(created_at) === index).map((createdAtDate) => { return (<option key={createdAtDate} value={createdAtDate}>{createdAtDate}</option>) })
 
-
-
   useEffect(() => {
     const fetchWorkouts = async () => {
       const allWorkouts = await getWorkouts();
