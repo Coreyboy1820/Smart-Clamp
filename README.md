@@ -28,8 +28,7 @@ The website is built using Typescript, ReactJs, and Express. The website is host
 
 ## Challenges we ran into
 
-We ran into a lot of problems with our IMU device. Originally we had one picked out but the open source drivers available were way too large for the Pico W. So we opted for a much older IMU, the MPU6050 that was much easier to work with. We had a lot of trouble with the OLED and getting it to update the screen properly. We also had trouble sending the correct data to the database. We had to do a lot of debugging to get everything working properly because sometimes the hardware would just stop and start working randomly it seemed.
-
+We ran into a lot of problems with our IMU device. Originally we had one picked out but the open-source drivers available were way too large for the Pico W. So we opted for a much older IMU, the MPU6050 that was much easier to work with. We had a lot of trouble with the OLED and getting it to update the screen properly. We also had trouble sending the correct data to the database. We had to do a lot of debugging to get everything working properly because sometimes the hardware would just stop and start working randomly it seemed. At one point we lost half of the pins on one of our RPi Pico W's and had to rewire everything.
 
 ## Accomplishments that we're proud of
 
@@ -41,7 +40,7 @@ We learned that Raspberry Pico W libraries in python are very bloated and not re
 
 ## What's next for Smart Clamp
 
-We would like to recreate the project using smart watches since we believe it could perform this task more seamlessly.
+We would like to recreate the project using smartwatches since we believe they could perform this task more seamlessly.
 
 ## Built With
 
@@ -69,3 +68,7 @@ We would like to recreate the project using smart watches since we believe it co
 - [Plan of Reference (POR) Link](https://docs.google.com/presentation/d/1PxHl6Sy7KdKY_HC14jw1VjQoOGeRQi7q73b3B5r9FrE/edit?usp=sharing)
 
 - [DevPost Link](https://devpost.com/software/smart-clamp)
+
+- [GitHub Repo] (https://github.com/Coreyboy1820/Smart-Clamp)
+
+- [GitHub Project/Kanban Board](https://github.com/users/Coreyboy1820/projects/1)
