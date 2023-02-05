@@ -2,7 +2,10 @@ import time
 class Timer:
     def __init__(self, maxTime):
         self.startTime = 0
-        self.maxTime = maxTime
+        if maxTime == 0:
+            self.maxTime = 9999999999
+        else:
+            self.maxTime = maxTime
         
     # if called it will restart timer
     def startTimer(self):
