@@ -15,6 +15,7 @@ json = {"username": "user1","exercise": "deadlift","reps": 0,"weight": 0,"durati
 # Screen Variables
 width = 128
 height = 64
+post = False
 
 # create the display
 oled = SSD1306_I2C(width=width, height=height, i2c=oled_i2c)
@@ -52,9 +53,10 @@ while True:
         display.handleSelect()
         display.displayMenu()
         display.handleCursor()
+        post = True
         sleep(.1)
     
-    if (display.startSet == False):
+    if (post):
         workout.reps = 0
         display.reps = 0
         json['weight'] = display.lastWeight
@@ -62,3 +64,4 @@ while True:
         json['exercise'] = current_exercise
         json['duration'] = display.lastTime
         connection.post('http://13.56.207.97:5000/workouts', json)
+        post = False
