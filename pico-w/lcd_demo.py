@@ -27,4 +27,6 @@ while True:
     display.handleSelect()
     display.displayMenu()
     display.handleCursor()
+#    print(display.timer.getTimeElapsed())
+    
     sleep(.1)
