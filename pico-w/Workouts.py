@@ -45,3 +45,12 @@ class Workouts:
             self.weight_state = 'down'
             self.reps+=1
         return self.reps
+    
+    def Squats(self):
+        accel = self.Update()
+        if (accel[2] < 0.65 and self.weight_state != 'up'):
+            self.weight_state = 'up'
+        elif(accel[2] < 0.65 and self.weight_state == 'up'):
+            self.weight_state = 'down'
+            self.reps+=1
+        return self.reps
