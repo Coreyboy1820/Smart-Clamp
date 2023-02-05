@@ -16,7 +16,7 @@ class RotaryDisplay:
         self.upButton = upButton
         self.downButton = downButton
         self.selectButton = selectButton
-        self.exerciseList = ["Bicep curls", "Tricep extensions", "Overhead press", "Bent over rows", "lateral raises"]
+        self.exerciseList = ["Bicep curls", "Overhead press", "Bent over rows", "lateral raises"]
         self.exerciseIndex = 0
         self.weight = 0
         self.line_height = 10

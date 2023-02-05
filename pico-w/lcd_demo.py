@@ -24,7 +24,6 @@ selectButton  = Button(2)
 
 display = RotaryDisplay(oled, upButton, downButton, selectButton)
 while True:
-    
     display.handleSelect()
     display.displayMenu()
     display.handleCursor()
