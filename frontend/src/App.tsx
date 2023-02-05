@@ -1,17 +1,36 @@
 import { useState, useEffect } from 'react';
 
-import './App.css';
-import Workouts from './components/Workouts';
-import { WorkoutsDTO } from './dto/workouts.dto';
 import { getWorkouts } from './util/api/workouts.api';
+import { WorkoutsDTO, WorkoutsGETParametersDTO } from './dto/workouts.dto';
+import { WORKOUT_FILTERS } from './util/constants';
+import Leaderboard from './components/Leaderboard';
+import Workouts from './components/Workouts';
+import './App.css';
+
 
 function App() {
+  const [workoutFilters, setWorkoutFilters] = useState<WorkoutsGETParametersDTO>(WORKOUT_FILTERS);
   const [workouts, setWorkouts] = useState<WorkoutsDTO[] | undefined>([]);
-  const user = { username: 'user1' }
+  const sortedLeaderboardWorkouts = workouts?.filter(workout => workout.exercise === workoutFilters.exercise).sort((a, b) => {
+    if (a.weight === b.weight) {
+      return b.reps - a.reps;
+    }
+    return b.weight - a.weight;
+  })
+
+  const filteredUserWorkouts = workouts.filter((workout) => {
+    if (workout.exercise === workoutFilters.exercise && workout.created_at.split('T')[0] === workoutFilters.created_at) {
+      return workout;
+    }
+  })
+  const user = { username: 'user1', workouts: workouts.filter(workout => workout.username === 'user1') }
+  const exercises = workouts.map((workout) => workout.exercise).filter((exercise, index, self) => self.indexOf(exercise) === index);
+  const exerciseOptions = exercises.map((exercise) => { return (<option key={exercise} value={exercise}>{exercise}</option>) })
+  const dateOptions = workouts.map((workout) => workout.created_at.split('T')[0]).filter((created_at, index, self) => self.indexOf(created_at) === index).map((createdAtDate) => { return (<option key={createdAtDate} value={createdAtDate}>{createdAtDate}</option>) })
 
   useEffect(() => {
     const fetchWorkouts = async () => {
-      const allWorkouts = await getWorkouts(user.username);
+      const allWorkouts = await getWorkouts();
       setWorkouts(allWorkouts);
     }
     fetchWorkouts();
@@ -23,7 +42,22 @@ function App() {
         <h1>Smart Clamp</h1>
       </header>
       <main>
-        <Workouts workouts={workouts} />
+        <select
+          name='exercise'
+          value={workoutFilters.exercise}
+          onChange={(e) => setWorkoutFilters({ ...workoutFilters, [e.target.name]: e.target.value })}
+        >
+          {exerciseOptions}
+        </select>
+        <select
+          name='created_at'
+          value={workoutFilters.created_at}
+          onChange={(e) => setWorkoutFilters({ ...workoutFilters, [e.target.name]: e.target.value })}
+        >
+          {dateOptions}
+        </select>
+        <Workouts workouts={filteredUserWorkouts} exercise={workoutFilters.exercise} />
+        <Leaderboard workouts={sortedLeaderboardWorkouts} exercise={workoutFilters.exercise} />
       </main>
     </div>
   );
