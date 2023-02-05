@@ -60,17 +60,19 @@ class RotaryDisplay:
         self.handleHighlight("Start Set", 4)
     
     def handleStartRest(self):
-        self.timer.startTimer()
+        if self.timer.isRunning():
+            self.timer.startTimer()
         # clear the screen
         self.oled.fill_rect(0,0,self.width,self.height,0)
-        self.handleHighlight(self.timer.getTimeElapsed(), 1)
-        self.handleHighlight(self.reps, 2)
+        self.handleHighlight(f"{self.timer.getTimeElapsed()}", 1)
+        self.handleHighlight(f"Reps: {self.reps}", 2)
         self.handleHighlight("stop", 3)
 
     def handleStartSet(self):
-        self.timer.startTimer()
+        if self.timer.isRunning():
+            self.timer.startTimer()
         self.oled.fill_rect(0,0,self.width,self.height,0)
-        self.handleHighlight(self.timer.getTimeElapsed(), 1)
+        self.handleHighlight(f"{self.timer.getTimeElapsed()}", 1)
         self.handleHighlight(f"Reps: {self.reps}", 2)
         self.handleHighlight("Stop", 3)
 
@@ -123,14 +125,14 @@ class RotaryDisplay:
         if self.selectButton.read():
             if self.startRest:
                 # handle the rest selection category
-                self.startRest == False
+                self.startRest = False
             elif self.startSet:
                 # handles the set selection category
                 self.lastTime = self.timer.getTimeElapsed()
                 self.lastWeight = self.weight
                 self.weight = 0
                 self.timer.stopTimer()
-                self.startSet == False
+                self.startSet = False
             else:
                 # this should only happen if you are on the home screen.
                 if (self.highlight == 1 or self.highlight == 2) and not self.selectPressed:
@@ -138,6 +140,6 @@ class RotaryDisplay:
                 elif (self.highlight == 1 or self.highlight==2) and self.selectPressed:
                     self.selectPressed = False
                 elif self.highlight == 3:
-                    self.startRest == True
+                    self.startRest = True
                 elif self.highlight == 4:
-                    self.startSet == True
+                    self.startSet = True
