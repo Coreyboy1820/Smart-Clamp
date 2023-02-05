@@ -9,7 +9,7 @@ from ssd1306 import SSD1306_I2C
 
 
 imu_i2c = I2C(0, sda=Pin(4), scl=Pin(5), freq=400000)
-oled_i2c = I2C(1, sda=Pin(18), scl=Pin(19), freq=400000)
+oled_i2c = I2C(1, sda=Pin(14), scl=Pin(15), freq=400000)
 # switch to oled_I2c = 0 sda = 8 scl = 9 when using breadboard | I2c = 1 sda = 18 scl = 19 when using protoboard
 json = {"username": "user1","exercise": "deadlift","reps": 0,"weight": 0,"duration": 0}
 

@@ -65,7 +65,7 @@ class RotaryDisplay:
             self.timer.startTimer()
         # clear the screen
         self.oled.fill_rect(0,0,self.width,self.height,0)
-        self.handleHighlight(f"{self.timer.getTimeElapsed()}", 1)
+        self.handleHighlight(f"      {self.timer.getTimeElapsed()}", 1)
         self.handleHighlight(f"Reps: {self.lastReps}", 2)
         self.handleHighlight("stop", 3)
 
@@ -73,7 +73,7 @@ class RotaryDisplay:
         if not self.timer.isRunning():
             self.timer.startTimer()
         self.oled.fill_rect(0,0,self.width,self.height,0)
-        self.handleHighlight(f"{self.timer.getTimeElapsed()}", 1)
+        self.handleHighlight(f"      {self.timer.getTimeElapsed()}", 1)
         self.handleHighlight(f"Reps: {self.reps}", 2)
         self.handleHighlight("Stop", 3)
 
@@ -116,7 +116,7 @@ class RotaryDisplay:
                     self.highlight -=1
                 else:
                     self.lastHighlight = self.highlight
-                    self.highlight = 1
+                    self.highlight = 4
                 self.displayMenu()
             # move down
             if self.downButton.read():
