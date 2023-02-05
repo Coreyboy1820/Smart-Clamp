@@ -7,7 +7,7 @@ import { getWorkouts } from './util/api/workouts.api';
 
 function App() {
   const [workouts, setWorkouts] = useState<WorkoutsDTO[] | undefined>([]);
-  const [user, setUser] = useState({ username: 'user1' });
+  const user = { username: 'user1' }
 
   useEffect(() => {
     const fetchWorkouts = async () => {
@@ -15,7 +15,7 @@ function App() {
       setWorkouts(allWorkouts);
     }
     fetchWorkouts();
-  }, []);
+  }, [user.username]);
 
   return (
     <div className="App">
