@@ -6,131 +6,87 @@ from machine import Pin, I2C
 from os import listdir
 from ssd1306 import SSD1306_I2C
 from time import sleep
+from button import Button
 
-# I2C variables
-id = 0
-sda = Pin(0)
-scl = Pin(1)
-i2c = I2C(id=id, scl=scl, sda=sda)
+class RotaryDisplay:
 
-# Screen Variables
-width = 128
-height = 64
-line = 1 
-highlight = 1
-shift = 0
-list_length = 0
-total_lines = 6
+    def __init__(self, oled, menu, upButton, downButton, selectButton, backButton):
+        self.oled = oled
+        self.upButton = upButton
+        self.downButton = downButton
+        self.selectButton = selectButton
+        self.backButton = backButton
+        self.menu = menu
+        self.list_length = len(self.menu)
+        self.item = 1
+        self.line = 1
+        self.line_height = 10
+        self.screen_offset = 2
+        self.total_lines = 6
+        self.shift = 0
+        self.highlight = 1
+        self.width = 128
+        self.height = 64
 
-# create the display
-oled = SSD1306_I2C(width=width, height=height, i2c=i2c)
-oled.init_display()
+    def launch(self):
+        """ Launch the Python script <filename> """
+        # clear the screen
+        self.oled.fill_rect(0,0,self.width,self.height,0)
+        self.oled.text("Launching", 1, 10)
+        self.oled.show()
 
-# Setup the Rotary Encoder
-button_pin = Pin(16, Pin.IN, Pin.PULL_UP)
-direction_pin = Pin(17, Pin.IN, Pin.PULL_UP)
-step_pin  = Pin(18, Pin.IN, Pin.PULL_UP)
+    def displayMenu(self):
+        """ Shows the menu on the screen"""
 
-# for tracking the direction and button state
-previous_value = True
-button_down = False
+        # clear the display
+        self.oled.fill_rect(0,0,self.width,self.height,0)
 
+        # Shift the list of files so that it shows on the display
+        short_list = self.menu[self.shift : self.shift + self.total_lines]
 
-def get_files():
-    """ Get a list of Python files in the root folder of the Pico """
-    
-    files = listdir()
-    menu = []
-    for file in files:
-        if file.endswith(".py"):
-            menu.append(file)
-
-    return(menu)
-
-
-def show_menu(menu):
-    """ Shows the menu on the screen"""
-    
-    # bring in the global variables
-    global line, highlight, shift, list_length
-
-    # menu variables
-    item = 1
-    line = 1
-    line_height = 10
-
-    # clear the display
-    oled.fill_rect(0,0,width,height,0)
-
-    # Shift the list of files so that it shows on the display
-    list_length = len(menu)
-    short_list = menu[shift:shift+total_lines]
-
-    for item in short_list:
-        if highlight == line:
-            oled.fill_rect(0,(line-1)*line_height, width,line_height,1)
-            oled.text(">",0, (line-1)*line_height,0)
-            oled.text(item, 10, (line-1)*line_height,0)
-            oled.show()
-        else:
-            oled.text(item, 10, (line-1)*line_height,1)
-            oled.show()
-        line += 1 
-    oled.show()
-
-
-def launch(filename):
-    """ Launch the Python script <filename> """
-    global file_list
-    # clear the screen
-    oled.fill_rect(0,0,width,height,0)
-    oled.text("Launching", 1, 10)
-    oled.text(filename,1, 20)
-    oled.show()
-    sleep(3)
-    exec(open(filename).read())
-    show_menu(file_list)
-
-
-# Get the list of Python files and display the menu
-file_list = get_files()
-show_menu(file_list)
-
-# Repeat forever
-while True:
-    if previous_value != step_pin.value():
-        if step_pin.value() == False:
-
-            # Turned Left 
-            if direction_pin.value() == False:
-                if highlight > 1:
-                    highlight -= 1  
-                else:
-                    if shift > 0:
-                        shift -= 1  
-
-            # Turned Right
+        for item in short_list:
+            if self.highlight == self.line:
+                self.oled.fill_rect(0,(self.line-1)*self.line_height+self.screen_offset, self.width,self.line_height,1)
+                self.oled.text(">",0, (self.line-1)*self.line_height,0)
+                self.oled.text(item, 10, (self.line-1)*self.line_height+self.screen_offset,0)
+                self.oled.show()
             else:
-                if highlight < total_lines:
-                    highlight += 1
-                else: 
-                    if shift+total_lines < list_length:
-                        shift += 1
+                self.oled.text(item, 10, (self.line-1)*self.line_height+self.screen_offset,1)
+                self.oled.show()
+            self.line += 1 
+        self.oled.show()
 
-            show_menu(file_list)
-        previous_value = step_pin.value()   
+    def handleCursor(self):
+        # move up
+        print(self.highlight)
+        if self.upButton.read():
+            if self.highlight > 1:
+                self.highlight -=1
+            else:
+                if self.shift > 0:
+                    self.shift -= 1
+        if self.downButton.read():
+            if self.highlight < self.total_lines:
+                self.highlight += 1
+            else: 
+                if self.shift+self.total_lines < self.list_length:
+                    self.shift += 1
+        
+
+
+#while True:
         
     # Check for button pressed
-    if button_pin.value() == False and not button_down:
-        button_down = True
+    #if button_pin.value() == False and not button_down:
+    #    button_down = True
 
-        print("Launching", file_list[highlight-1+shift]) 
+   #     print("Launching", menu[highlight-1+shift]) 
 
         # execute script
-        launch(file_list[(highlight-1) + shift])
+        # launch(menu[(highlight-1) + shift])
         
-        print("Returned from launch")
+  #      print("Returned from launch")
 
     # Decbounce button
-    if button_pin.value() == True and button_down:
-        button_down = False
+ #   if button_pin.value() == True and button_down:
+#        button_down = False
