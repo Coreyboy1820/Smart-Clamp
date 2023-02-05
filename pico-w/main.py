@@ -9,7 +9,8 @@ from ssd1306 import SSD1306_I2C
 
 
 imu_i2c = I2C(0, sda=Pin(4), scl=Pin(5), freq=400000)
-oled_i2c = I2C(0, sda=Pin(8), scl=Pin(9), freq=400000)
+oled_i2c = I2C(1, sda=Pin(18), scl=Pin(19), freq=400000)
+# switch to oled_I2c = 0 sda = 8 scl = 9 when using breadboard | I2c = 1 sda = 18 scl = 19 when using protoboard
 json = {"username": "user1","exercise": "deadlift","reps": 0,"weight": 0,"duration": 0}
 
 # Screen Variables
@@ -24,18 +25,18 @@ oled.init_display()
 # Setup the Rotary Encoder
 upButton = Button(26)
 downButton = Button(28)
-selectButton  = Button(2)
+selectButton  = Button(22)
 
 display = RotaryDisplay(oled, upButton, downButton, selectButton)
 workout = Workouts.Workouts(imu_i2c)
-connection = WiFiConnection('Turbo', 'sfcastro')
+connection = WiFiConnection('SJSU Robotics 2.4GHz', 'R0Bot1cs3250')
 connection.connect()
 
 while True:
     display.handleSelect()
     display.displayMenu()
     display.handleCursor()
-    sleep(.1)
+    sleep(.01)
     current_exercise = display.exerciseList[display.exerciseIndex]
     
     while (display.startSet):
@@ -54,7 +55,7 @@ while True:
         display.displayMenu()
         display.handleCursor()
         post = True
-        sleep(.1)
+        sleep(.01)
     
     if (post):
         workout.reps = 0
