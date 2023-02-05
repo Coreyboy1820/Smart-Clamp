@@ -1,9 +1,9 @@
 import { WorkoutsDTO, WorkoutsGETParametersDTO } from "../dto/workouts.dto";
 
-export const DEFAULT_WORKOUTS_GET_PARAMETERS: WorkoutsGETParametersDTO = {
+export const WORKOUT_FILTERS: WorkoutsGETParametersDTO = {
     username: "user1",
     exercise: "",
-    created_at: ""
+    created_at: new Date().toISOString().split('T')[0],
 };
 
 export const DEFAULT_WORKOUTS: WorkoutsDTO[] = [{

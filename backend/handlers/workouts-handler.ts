@@ -12,12 +12,6 @@ export const createWorkout = (req, res) => {
 
 export const readWorkouts = (req, res) => {
     let query = `SELECT * FROM workouts WHERE username = '${req.query.username}'`;
-    if (req.query.created_at) {
-        query += ` AND DATE(created_at) = '${req.query.created_at}'`;
-    }
-    if (req.query.exercise) {
-        query += ` AND exercise = '${req.query.exercise}'`;
-    }
     database.query(query, (err: any, result: any) => {
         if (err) {
             res.send("Error GET /workouts");
