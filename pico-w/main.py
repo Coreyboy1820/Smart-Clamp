@@ -26,8 +26,9 @@ downButton = Button(28)
 selectButton  = Button(2)
 
 display = RotaryDisplay(oled, upButton, downButton, selectButton)
-workout = Workouts.Workouts(10, 10, imu_i2c)
+workout = Workouts.Workouts(imu_i2c)
 connection = WiFiConnection('Turbo', 'sfcastro')
+connection.connect()
 
 while True:
     display.handleSelect()
@@ -60,4 +61,4 @@ while True:
         json['reps'] = display.lastReps
         json['exercise'] = current_exercise
         json['duration'] = display.lastTime
-        connection.post(json)
+        connection.post('http://13.56.207.97:5000/workouts', json)
