@@ -1,16 +1,12 @@
 from imu import MPU6050
 import time
-from machine import Pin, I2C
 
 class Workouts:
-    def __init__(self, timer, max_reps):
-        self.i2c = I2C(0, sda=Pin(0), scl=Pin(1), freq=400000)
+    def __init__(self, i2c):
+        self.i2c = i2c
         self.imu = MPU6050(self.i2c)
-        self.timer = timer
         self.weight_state = 'down'
         self.reps = 0
-        self.max_reps = max_reps
-        self.rep_distance = []
         
     def Update(self):
         ax=round(self.imu.accel.x,4)

@@ -1,7 +1,3 @@
-# Rotary Menu
-# Kevin McAleer
-# May 2021
-
 from machine import Pin, I2C
 from os import listdir
 from ssd1306 import SSD1306_I2C
@@ -16,7 +12,7 @@ class RotaryDisplay:
         self.upButton = upButton
         self.downButton = downButton
         self.selectButton = selectButton
-        self.exerciseList = ["Bicep curls", "Overhead press", "Bent over rows", "lateral raises"]
+        self.exerciseList = ["Bicep curls", "Overhead press", "Bent over rows", "Squats", "Bench Press"]
         self.exerciseIndex = 0
         self.weight = 0
         self.line_height = 10
