@@ -1,9 +1,8 @@
 export default function Leaderboard({ workouts, exercise }) {
     const leaderboardList = workouts.map((workout, index) => {
         return (
-            <div key={workout.id} className="workout">
-
-                <p><b>{index + 1} - {workout.username}</b> {workout.reps} reps x {workout.weight}lbs</p>
+            <div key={workout.id} className="leaderboard">
+                <p className="leadboard-text"><b>{index + 1} - {workout.username}</b> {workout.reps} reps x {workout.weight}lbs</p>
             </div>
         )
     })
