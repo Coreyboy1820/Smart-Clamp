@@ -18,11 +18,11 @@ class RotaryDisplay:
         self.selectButton = selectButton
         self.backButton = backButton
         self.exerciseList = ["Bicep curls", "Tricep extensions", "Overhead press", "Bent over rows", "lateral raises"]
-        self.exerciesIndex = 0
+        self.exerciseIndex = 0
         self.weight = 0
         self.line_height = 10
         self.screen_offset = 2
-        self.total_lines = 3
+        self.total_lines = 4
         self.shift = 0
         self.highlight = 1
         self.width = 128
@@ -31,6 +31,10 @@ class RotaryDisplay:
         self.startRest = False
         self.timer = Timer(0)
         self.reps = 0
+        self.selectPressed = False
+        self.lastReps = 0
+        self.lastTime = 0.0
+        self.lastWeight = 0.0
 
     def launch(self):
         """ Launch the Python script <filename> """
@@ -55,8 +59,8 @@ class RotaryDisplay:
         self.oled.fill_rect(0,0,self.width,self.height,0)
 
         # the second parameter in the handleHighlight function is the order of which they are placed in the device
-        self.handleHighlight(self.exerciseList[self.exerciesIndex], 1)
-        self.handleHighlight(self.weight, 2)
+        self.handleHighlight(self.exerciseList[self.exerciseIndex], 1)
+        self.handleHighlight(f"Weight: {self.weight}", 2)
         self.handleHighlight("Start Rest", 3)
         self.handleHighlight("Start Set", 4)
     
@@ -71,6 +75,10 @@ class RotaryDisplay:
     def handleStartSet(self):
         self.timer.startTimer()
         self.oled.fill_rect(0,0,self.width,self.height,0)
+        self.handleHighlight(self.timer.getTimeElapsed(), 1)
+        self.handleHighlight(f"Reps: {self.reps}", 2)
+        self.handleHighlight("Stop", 3)
+
         
 
     def handleHighlight(self, item, number):
@@ -83,31 +91,57 @@ class RotaryDisplay:
         self.oled.show()
 
     def handleCursor(self):
-        # move up
-        if not self.upButton.read():
-            if self.highlight > 1:
-                self.highlight -=1
-            else:
-                if self.shift > 0:
-                    self.shift -= 1
-            self.displayMenu()
-        print(self.highlight)
-        # move down
-        if self.downButton.read():
-            if self.highlight < self.total_lines:
-                self.highlight += 1
-            else: 
-                if self.shift+self.total_lines < len(self.selectionMenu):
-                    self.shift += 1
-            self.displayMenu()
+        if self.selectPressed:
+            # the only time selectpressed is high is when 
+            if self.highlight == 1:
+                if not self.upButton.read():
+                    self.exerciseIndex = (self.exerciseIndex + 1) % 5
+                if self.downButton.read():
+                    if self.exerciseIndex == 0:
+                        self.exerciseIndex = 4
+                    else:
+                        self.exerciseIndex -= 1
+            elif self.highlight == 2:
+                if not self.upButton.read():
+                    self.weight += 2.5
+                if self.downButton.read():
+                    if self.exerciseIndex == 0:
+                        self.exerciseIndex = 0
+                    else:
+                        self.exerciseIndex -= 2.5
+
+        else:
+            # move up
+            if not self.upButton.read():
+                if self.highlight > 1:
+                    self.highlight -=1
+                self.displayMenu()
+            # move down
+            if self.downButton.read():
+                if self.highlight < self.total_lines:
+                    self.highlight += 1
+                else:
+                    self.highlight = 1
+                self.displayMenu()
         
     def handleSelect(self):
         if self.startRest:
             # handle the rest selection category
-            self.backButton
+            self.startRest == False
         elif self.startSet:
             # handles the set selection category
-            self.backButton
+            self.lastTime = self.timer.getTimeElapsed()
+            self.lastWeight = self.weight
+            self.weight = 0
+            self.timer.stopTimer()
+            self.startSet == False
         else:
             # this should only happen if you are on the home screen.
-            self.backButton
+            if (self.highlight == 1 or self.highlight == 2) and not self.selectPressed:
+                self.selectPressed = True
+            elif (self.highlight == 1 or self.highlight==2) and self.selectPressed:
+                self.selectPressed = False
+            elif self.highlight == 3:
+                self.startRest == True
+            elif self.highlight == 4:
+                self.startSet == True

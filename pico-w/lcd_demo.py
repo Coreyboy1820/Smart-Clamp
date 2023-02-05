@@ -5,8 +5,8 @@ from button import Button
 from rotary_display import RotaryDisplay
 
 id = 0
-sda = Pin(0)
-scl = Pin(1)
+sda = Pin(8)
+scl = Pin(9)
 i2c = I2C(id=id, scl=scl, sda=sda)
 
 # Screen Variables
