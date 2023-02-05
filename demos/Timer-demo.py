@@ -1,6 +1,6 @@
 import sys
-sys.path.insert(1, "../pico-w")
-import Timer.py
+import time
+from Timers import Timer
 def timerDemo():
     timer = Timer(10)
     while(True):
