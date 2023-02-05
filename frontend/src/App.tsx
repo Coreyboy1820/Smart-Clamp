@@ -5,6 +5,7 @@ import { WorkoutsDTO, WorkoutsGETParametersDTO } from './dto/workouts.dto';
 import { WORKOUT_FILTERS, CURRENT_USER } from './util/constants';
 import Leaderboard from './components/Leaderboard';
 import Workouts from './components/Workouts';
+import logo from './mini-logo.png';
 import './App.css';
 
 
@@ -41,6 +42,7 @@ function App() {
     <div>
       <header className="App-header">
         <h1>Smart Clamp</h1>
+
       </header>
       <main>
         <div className='input-group'>
