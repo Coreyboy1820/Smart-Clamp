@@ -13,6 +13,12 @@ function App() {
   const [workoutFilters, setWorkoutFilters] = useState<WorkoutsGETParametersDTO>(WORKOUT_FILTERS);
   const [workouts, setWorkouts] = useState<WorkoutsDTO[] | undefined>([]);
   const sortedLeaderboardWorkouts = workouts?.filter(workout => workout.exercise === workoutFilters.exercise).sort((a, b) => {
+    if (a.reps === 0) {
+      return 1;
+    }
+    if (b.reps === 0) {
+      return -1;
+    }
     if (a.weight === b.weight) {
       return b.reps - a.reps;
     }
