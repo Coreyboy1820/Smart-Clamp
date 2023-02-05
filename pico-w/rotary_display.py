@@ -11,12 +11,11 @@ from Timers import Timer
 
 class RotaryDisplay:
 
-    def __init__(self, oled, upButton, downButton, selectButton, backButton):
+    def __init__(self, oled, upButton, downButton, selectButton):
         self.oled = oled
         self.upButton = upButton
         self.downButton = downButton
         self.selectButton = selectButton
-        self.backButton = backButton
         self.exerciseList = ["Bicep curls", "Tricep extensions", "Overhead press", "Bent over rows", "lateral raises"]
         self.exerciseIndex = 0
         self.weight = 0
@@ -94,7 +93,7 @@ class RotaryDisplay:
         if self.selectPressed:
             # the only time selectpressed is high is when 
             if self.highlight == 1:
-                if not self.upButton.read():
+                if self.upButton.read():
                     self.exerciseIndex = (self.exerciseIndex + 1) % 5
                 if self.downButton.read():
                     if self.exerciseIndex == 0:
@@ -102,7 +101,7 @@ class RotaryDisplay:
                     else:
                         self.exerciseIndex -= 1
             elif self.highlight == 2:
-                if not self.upButton.read():
+                if self.upButton.read():
                     self.weight += 2.5
                 if self.downButton.read():
                     if self.exerciseIndex == 0:
@@ -112,7 +111,7 @@ class RotaryDisplay:
 
         else:
             # move up
-            if not self.upButton.read():
+            if self.upButton.read():
                 if self.highlight > 1:
                     self.highlight -=1
                 self.displayMenu()
@@ -125,23 +124,24 @@ class RotaryDisplay:
                 self.displayMenu()
         
     def handleSelect(self):
-        if self.startRest:
-            # handle the rest selection category
-            self.startRest == False
-        elif self.startSet:
-            # handles the set selection category
-            self.lastTime = self.timer.getTimeElapsed()
-            self.lastWeight = self.weight
-            self.weight = 0
-            self.timer.stopTimer()
-            self.startSet == False
-        else:
-            # this should only happen if you are on the home screen.
-            if (self.highlight == 1 or self.highlight == 2) and not self.selectPressed:
-                self.selectPressed = True
-            elif (self.highlight == 1 or self.highlight==2) and self.selectPressed:
-                self.selectPressed = False
-            elif self.highlight == 3:
-                self.startRest == True
-            elif self.highlight == 4:
-                self.startSet == True
+        if self.selectButton.read():
+            if self.startRest:
+                # handle the rest selection category
+                self.startRest == False
+            elif self.startSet:
+                # handles the set selection category
+                self.lastTime = self.timer.getTimeElapsed()
+                self.lastWeight = self.weight
+                self.weight = 0
+                self.timer.stopTimer()
+                self.startSet == False
+            else:
+                # this should only happen if you are on the home screen.
+                if (self.highlight == 1 or self.highlight == 2) and not self.selectPressed:
+                    self.selectPressed = True
+                elif (self.highlight == 1 or self.highlight==2) and self.selectPressed:
+                    self.selectPressed = False
+                elif self.highlight == 3:
+                    self.startRest == True
+                elif self.highlight == 4:
+                    self.startSet == True
