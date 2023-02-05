@@ -12,14 +12,15 @@ class RotaryDisplay:
         self.upButton = upButton
         self.downButton = downButton
         self.selectButton = selectButton
-        self.exerciseList = ["Bicep curls", "Overhead press", "Bent over rows", "lateral raises"]
+        self.exerciseList = ["Bicep curls", "Bent over rows", "Squats", "Bench Press"]
         self.exerciseIndex = 0
         self.weight = 0
         self.line_height = 10
-        self.screen_offset = 2
+        self.screen_offset = 6
         self.total_lines = 4
         self.shift = 0
         self.highlight = 1
+        self.lastHighlight = 1
         self.width = 128
         self.height = 64
         self.startSet = False
@@ -41,10 +42,10 @@ class RotaryDisplay:
     def displayMenu(self):
         if self.startRest:
             self.highlight = 3
-            self.handleStartSet()
+            self.handleStartRest()
         elif self.startSet:
             self.highlight = 3
-            self.handleStartRest()
+            self.handleStartSet()
         else:
             self.handleMainMenu()
 
@@ -60,19 +61,19 @@ class RotaryDisplay:
         self.handleHighlight("Start Set", 4)
     
     def handleStartRest(self):
-        if self.timer.isRunning():
+        if not self.timer.isRunning():
             self.timer.startTimer()
         # clear the screen
         self.oled.fill_rect(0,0,self.width,self.height,0)
-        self.handleHighlight(f"{self.timer.getTimeElapsed()}", 1)
-        self.handleHighlight(f"Reps: {self.reps}", 2)
+        self.handleHighlight(f"      {self.timer.getTimeElapsed()}", 1)
+        self.handleHighlight(f"Reps: {self.lastReps}", 2)
         self.handleHighlight("stop", 3)
 
     def handleStartSet(self):
-        if self.timer.isRunning():
+        if not self.timer.isRunning():
             self.timer.startTimer()
         self.oled.fill_rect(0,0,self.width,self.height,0)
-        self.handleHighlight(f"{self.timer.getTimeElapsed()}", 1)
+        self.handleHighlight(f"      {self.timer.getTimeElapsed()}", 1)
         self.handleHighlight(f"Reps: {self.reps}", 2)
         self.handleHighlight("Stop", 3)
 
@@ -92,32 +93,38 @@ class RotaryDisplay:
             # the only time selectpressed is high is when 
             if self.highlight == 1:
                 if self.upButton.read():
-                    self.exerciseIndex = (self.exerciseIndex + 1) % 5
+                    self.exerciseIndex = (self.exerciseIndex + 1) % 4
                 if self.downButton.read():
-                    if self.exerciseIndex == 0:
-                        self.exerciseIndex = 4
-                    else:
+                    if self.exerciseIndex > 0:
                         self.exerciseIndex -= 1
+                    else:
+                        self.exerciseIndex = 3
             elif self.highlight == 2:
                 if self.upButton.read():
                     self.weight += 2.5
                 if self.downButton.read():
-                    if self.exerciseIndex == 0:
-                        self.exerciseIndex = 0
+                    if self.weight == 0:
+                        self.weight = 0
                     else:
-                        self.exerciseIndex -= 2.5
+                        self.weight -= 2.5
 
         else:
             # move up
             if self.upButton.read():
                 if self.highlight > 1:
+                    self.lastHightLight = self.highlight
                     self.highlight -=1
+                else:
+                    self.lastHighlight = self.highlight
+                    self.highlight = 4
                 self.displayMenu()
             # move down
             if self.downButton.read():
                 if self.highlight < self.total_lines:
+                    self.lastHighlight = self.highlight
                     self.highlight += 1
                 else:
+                    self.lastHighlight = self.highlight
                     self.highlight = 1
                 self.displayMenu()
         
@@ -126,11 +133,13 @@ class RotaryDisplay:
             if self.startRest:
                 # handle the rest selection category
                 self.startRest = False
+                self.timer.stopTimer()
             elif self.startSet:
                 # handles the set selection category
                 self.lastTime = self.timer.getTimeElapsed()
                 self.lastWeight = self.weight
                 self.weight = 0
+                self.lastReps = self.reps
                 self.timer.stopTimer()
                 self.startSet = False
             else:
