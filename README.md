@@ -1,6 +1,6 @@
 # Smart Clamp
 
-An smart clamp that automatically records workout data like number of repetitions and time under tension while lifting weights.
+A smart clamp that automatically records workout data like the number of repetitions and time under tension while lifting weights.
 
 ![](web-screenshots/product-1.jpg)
 
@@ -37,7 +37,7 @@ We are pretty proud of how everything came together. From the custom hardware to
 
 ## What we learned
 
-We learned that Raspberry Pico W libraries in python are very bloat heavy and not really ideal for most embedded projects.
+We learned that Raspberry Pico W libraries in python are very bloated and not really ideal for most embedded projects.
 
 ## What's next for Smart Clamp
 
